@@ -10,7 +10,7 @@ using WikiCorp.CoreApi.Data;
 namespace WikiCorp.CoreApi.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20210509232451_InitialCreate")]
+    [Migration("20210509235644_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,7 +152,11 @@ namespace WikiCorp.CoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Iceriks");
+                    b.HasIndex("KategoriId");
+
+                    b.HasIndex("YazarKullaniciId");
+
+                    b.ToTable("Icerik");
                 });
 
             modelBuilder.Entity("WikiCorp.CoreApi.Models.IcerikVO.IcerikPuan", b =>
@@ -173,7 +177,9 @@ namespace WikiCorp.CoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IcerikPuans");
+                    b.HasIndex("IcerikId");
+
+                    b.ToTable("IcerikPuan");
                 });
 
             modelBuilder.Entity("WikiCorp.CoreApi.Models.KullaniciVO.Kullanici", b =>
@@ -264,7 +270,11 @@ namespace WikiCorp.CoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("KullaniciRols");
+                    b.HasIndex("KullaniciId");
+
+                    b.HasIndex("RolId");
+
+                    b.ToTable("KullaniciRol");
                 });
 
             modelBuilder.Entity("WikiCorp.CoreApi.Models.ParametreVO.Kategori", b =>
@@ -282,7 +292,9 @@ namespace WikiCorp.CoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Kategoris");
+                    b.HasIndex("RolId");
+
+                    b.ToTable("Kategori");
                 });
 
             modelBuilder.Entity("WikiCorp.CoreApi.Models.ParametreVO.Rol", b =>
@@ -363,6 +375,66 @@ namespace WikiCorp.CoreApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WikiCorp.CoreApi.Models.IcerikVO.Icerik", b =>
+                {
+                    b.HasOne("WikiCorp.CoreApi.Models.ParametreVO.Kategori", "Kategori")
+                        .WithMany()
+                        .HasForeignKey("KategoriId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WikiCorp.CoreApi.Models.KullaniciVO.Kullanici", "YazarKullanici")
+                        .WithMany()
+                        .HasForeignKey("YazarKullaniciId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Kategori");
+
+                    b.Navigation("YazarKullanici");
+                });
+
+            modelBuilder.Entity("WikiCorp.CoreApi.Models.IcerikVO.IcerikPuan", b =>
+                {
+                    b.HasOne("WikiCorp.CoreApi.Models.IcerikVO.Icerik", "Icerik")
+                        .WithMany()
+                        .HasForeignKey("IcerikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Icerik");
+                });
+
+            modelBuilder.Entity("WikiCorp.CoreApi.Models.KullaniciVO.KullaniciRol", b =>
+                {
+                    b.HasOne("WikiCorp.CoreApi.Models.KullaniciVO.Kullanici", "Kullanici")
+                        .WithMany()
+                        .HasForeignKey("KullaniciId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WikiCorp.CoreApi.Models.ParametreVO.Rol", "Rol")
+                        .WithMany()
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Kullanici");
+
+                    b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("WikiCorp.CoreApi.Models.ParametreVO.Kategori", b =>
+                {
+                    b.HasOne("WikiCorp.CoreApi.Models.ParametreVO.Rol", "Rol")
+                        .WithMany()
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
                 });
 #pragma warning restore 612, 618
         }

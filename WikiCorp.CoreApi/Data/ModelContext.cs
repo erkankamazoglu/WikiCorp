@@ -13,9 +13,9 @@ namespace WikiCorp.CoreApi.Data
             
         }
 
-        public DbSet<Icerik> Iceriks { get; set; }
-        public DbSet<IcerikPuan> IcerikPuans { get; set; } 
-        public DbSet<KullaniciRol> KullaniciRols { get; set; }
-        public DbSet<Kategori> Kategoris { get; set; } 
+        public DbSet<Icerik> Icerik { get; set; }
+        public DbSet<IcerikPuan> IcerikPuan { get; set; } 
+        public DbSet<KullaniciRol> KullaniciRol { get; set; }
+        public DbSet<Kategori> Kategori { get; set; } 
     }
 }

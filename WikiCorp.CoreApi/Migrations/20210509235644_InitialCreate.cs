@@ -51,68 +51,6 @@ namespace WikiCorp.CoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IcerikPuans",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IcerikId = table.Column<int>(type: "int", nullable: false),
-                    KullaniciId = table.Column<int>(type: "int", nullable: false),
-                    Puan = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IcerikPuans", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Iceriks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    YazarKullaniciId = table.Column<int>(type: "int", nullable: false),
-                    KategoriId = table.Column<int>(type: "int", nullable: false),
-                    Baslik = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Icerigi = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EklenmeTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AnahtarKelimeler = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OkuyanSayisi = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Iceriks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Kategoris",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RolId = table.Column<int>(type: "int", nullable: false),
-                    Adi = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Kategoris", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "KullaniciRols",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    KullaniciId = table.Column<int>(type: "int", nullable: false),
-                    RolId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_KullaniciRols", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -128,6 +66,26 @@ namespace WikiCorp.CoreApi.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Kategori",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RolId = table.Column<int>(type: "int", nullable: false),
+                    Adi = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Kategori", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Kategori_AspNetRoles_RolId",
+                        column: x => x.RolId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -218,6 +176,84 @@ namespace WikiCorp.CoreApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "KullaniciRol",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    KullaniciId = table.Column<int>(type: "int", nullable: false),
+                    RolId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KullaniciRol", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_KullaniciRol_AspNetRoles_RolId",
+                        column: x => x.RolId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_KullaniciRol_AspNetUsers_KullaniciId",
+                        column: x => x.KullaniciId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Icerik",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    YazarKullaniciId = table.Column<int>(type: "int", nullable: false),
+                    KategoriId = table.Column<int>(type: "int", nullable: false),
+                    Baslik = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Icerigi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EklenmeTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AnahtarKelimeler = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OkuyanSayisi = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Icerik", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Icerik_AspNetUsers_YazarKullaniciId",
+                        column: x => x.YazarKullaniciId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Icerik_Kategori_KategoriId",
+                        column: x => x.KategoriId,
+                        principalTable: "Kategori",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IcerikPuan",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IcerikId = table.Column<int>(type: "int", nullable: false),
+                    KullaniciId = table.Column<int>(type: "int", nullable: false),
+                    Puan = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IcerikPuan", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_IcerikPuan_Icerik_IcerikId",
+                        column: x => x.IcerikId,
+                        principalTable: "Icerik",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -256,6 +292,36 @@ namespace WikiCorp.CoreApi.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Icerik_KategoriId",
+                table: "Icerik",
+                column: "KategoriId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Icerik_YazarKullaniciId",
+                table: "Icerik",
+                column: "YazarKullaniciId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IcerikPuan_IcerikId",
+                table: "IcerikPuan",
+                column: "IcerikId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Kategori_RolId",
+                table: "Kategori",
+                column: "RolId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_KullaniciRol_KullaniciId",
+                table: "KullaniciRol",
+                column: "KullaniciId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_KullaniciRol_RolId",
+                table: "KullaniciRol",
+                column: "RolId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -276,22 +342,22 @@ namespace WikiCorp.CoreApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "IcerikPuans");
+                name: "IcerikPuan");
 
             migrationBuilder.DropTable(
-                name: "Iceriks");
+                name: "KullaniciRol");
 
             migrationBuilder.DropTable(
-                name: "Kategoris");
-
-            migrationBuilder.DropTable(
-                name: "KullaniciRols");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Icerik");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Kategori");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
         }
     }
 }
