@@ -32,7 +32,9 @@ namespace WikiCorp.CoreApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {  
+            services.AddCors();
+
             services.AddDbContext<ModelContext>(x => x.UseSqlServer("Data Source=DESKTOP-S9NJR9V;Initial Catalog=WikiCorp; User ID=sa; Password=123;"));
             services.AddIdentity<Kullanici, Rol>().AddEntityFrameworkStores<ModelContext>();
             services.Configure<IdentityOptions>(options => {
@@ -46,7 +48,7 @@ namespace WikiCorp.CoreApi
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
 
-                options.User.RequireUniqueEmail = true; 
+                options.User.RequireUniqueEmail = true;  
             }); 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers().AddNewtonsoftJson(options => {
@@ -79,8 +81,15 @@ namespace WikiCorp.CoreApi
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
-            }
+            } 
 
+            app.UseCors(builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .SetIsOriginAllowed((host) => true)
+                .AllowCredentials()
+            );
+            
             //app.UseHttpsRedirection();
 
             app.UseRouting();
