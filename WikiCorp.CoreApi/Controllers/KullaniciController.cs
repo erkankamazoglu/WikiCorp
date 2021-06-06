@@ -10,24 +10,30 @@ using System.Security.Claims;
 using AutoMapper;
 using WikiCorp.CoreApi.Models.KullaniciVO;
 using WikiCorp.CoreApi.DTO;
+using Microsoft.EntityFrameworkCore;
+using WikiCorp.CoreApi.Data;
+using System.Linq;
+using WikiCorp.CoreApi.Helpers;
 
 namespace WikiCorp.CoreApi.Controllers
-{
+{ 
     [ApiController]
     [Route("Api/[controller]")]
     public class KullaniciController : ControllerBase
-    {
+    { 
         private readonly UserManager<Kullanici> _userManager;
         private readonly SignInManager<Kullanici> _signInManager;
         public readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly ModelContext _context;
 
-        public KullaniciController(UserManager<Kullanici> userManager, SignInManager<Kullanici> signInManager, IConfiguration configuration, IMapper mapper)
+        public KullaniciController(UserManager<Kullanici> userManager, SignInManager<Kullanici> signInManager, IConfiguration configuration, IMapper mapper, ModelContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
-            _mapper = mapper;
+            _mapper = mapper; 
+            _context = context;
         }
 
         [HttpPost("KayitOl")]
@@ -84,5 +90,35 @@ namespace WikiCorp.CoreApi.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         } 
+
+        [HttpGet("KullanicilariGetir")] 
+        public async Task<IActionResult> KullanicilariGetir()
+        {
+            var models = await _userManager
+            .Users            
+            .ToListAsync();
+            return Ok(models);
+        } 
+
+        [HttpGet("KullaniciGetir/{id}")] 
+        public async Task<IActionResult> KullaniciGetir(int id)
+        {
+            var model = await _userManager.FindByIdAsync(id.ToString()); 
+            if(model != null)
+                return Ok(model);
+            else
+                return NotFound();
+        }
+
+        [HttpGet("KullaniciYoneticiMi")] 
+        public async Task<IActionResult> KullaniciYoneticiMi()
+        {
+            int userId = JwtHelper.GetUserIdFromToken(HttpContext.User); 
+            var model = await _context.KullaniciRol.Where(i => i.KullaniciId == userId && i.RolId == 1).FirstAsync(); 
+            if(model != null)
+                return Ok(model);
+            else
+                return Ok(null);
+        }
     }
 }

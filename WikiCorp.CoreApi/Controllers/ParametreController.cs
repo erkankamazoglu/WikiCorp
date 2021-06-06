@@ -4,6 +4,9 @@ using WikiCorp.CoreApi.Data;
 using Microsoft.EntityFrameworkCore;
 using WikiCorp.CoreApi.Models.ParametreVO;
 using Microsoft.AspNetCore.Authorization;
+using WikiCorp.CoreApi.Models.KullaniciVO;
+using WikiCorp.CoreApi.Helpers;
+using System.Linq;
 
 namespace WikiCorp.CoreApi.Controllers
 {  
@@ -93,10 +96,14 @@ namespace WikiCorp.CoreApi.Controllers
         [HttpGet("KategorileriGetir")] 
         public async Task<IActionResult> KategorileriGetir()
         {
-            var kategoriler = await _context
+            int userId = JwtHelper.GetUserIdFromToken(HttpContext.User); 
+            var kullaniciRolIds = await _context.KullaniciRol.Where(i => i.KullaniciId == userId).Select(i => i.RolId).ToListAsync(); 
+
+            var models = await _context
             .Kategori 
+            .Where(i => kullaniciRolIds.Contains(i.RolId) || kullaniciRolIds.Contains(1))
             .ToListAsync();
-            return Ok(kategoriler);
+            return Ok(models);
         } 
 
         [HttpGet("KategoriGetir/{id}")] 
@@ -158,6 +165,80 @@ namespace WikiCorp.CoreApi.Controllers
             }
 
             _context.Kategori.Remove(model);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+        [HttpGet("KullaniciRolleriGetir")] 
+        public async Task<IActionResult> KullaniciRolleriGetir()
+        {
+            var models = await _context
+            .KullaniciRol 
+            .ToListAsync();
+            return Ok(models);
+        } 
+
+        [HttpGet("KullaniciRolGetir/{id}")] 
+        public async Task<IActionResult> KullaniciRolGetir(int id)
+        {
+            var model = await _context.KullaniciRol.FirstAsync(i => i.Id == id); 
+            if(model != null)
+                return Ok(model);
+            else
+                return NotFound();
+        }
+ 
+        [HttpPost("KullaniciRolKaydet")]
+        public async Task<IActionResult> KullaniciRolKaydet(KullaniciRol entity) 
+        {
+            _context.KullaniciRol.Add(entity); 
+            await _context.SaveChangesAsync(); 
+            return CreatedAtAction(nameof(KullaniciRolGetir), new {id = entity.Id}, entity);
+        }
+
+        [HttpPut("KullaniciRolGuncelle/{id}")]
+        public async Task<IActionResult> KullaniciRolGuncelle(int id, KullaniciRol entity)
+        {
+            if (id != entity.Id)
+            {
+                return BadRequest();
+            }
+
+            var model = await _context.KullaniciRol.FindAsync(id);
+
+            if(model == null)
+            {
+                return NotFound();
+            }
+
+            model.KullaniciId = entity.KullaniciId; 
+            model.RolId = entity.RolId; 
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (System.Exception)
+            {
+                return NotFound();
+            } 
+
+            return NoContent();
+        }
+    
+        [HttpDelete("KullaniciRolSil/{id}")]
+        public async Task<IActionResult> KullaniciRolSil(int id)
+        {
+            var model = await _context.KullaniciRol.FindAsync(id);
+
+            if(model == null)
+            {
+                return NotFound();
+            }
+
+            _context.KullaniciRol.Remove(model);
             await _context.SaveChangesAsync();
 
             return NoContent();

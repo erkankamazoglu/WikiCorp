@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import IcerikConsumer from "../contexts/Context"
+import IcerikConsumer from "../contexts/Icerik-Context"
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
@@ -18,17 +18,29 @@ class Icerik extends Component {
     onDeleteIcerik = async (dispatch, e) => {
         const {id} = this.props;
         //Delete Request
-        await axios.delete(`http://localhost:3004/iceriks/${id}`);
+        const token = sessionStorage.getItem('token');
+        await axios.delete(`http://localhost:5000/Api/Icerik/IcerikSil/${id}`,{ headers: {"Authorization" : `Bearer ${token}`} });
 
         //Consumer Dispatch
         dispatch({type :"DELETE_ICERIK", payload: id})
     } 
 
+    componentDidMount = async() => { 
+        const token = sessionStorage.getItem('token'); 
+        const {kategoriId} = this.props; 
+
+        await axios.get(`http://localhost:5000/Api/Parametre/KategoriGetir/${kategoriId}`,{ headers: {"Authorization" : `Bearer ${token}`} })
+        .then(response => { 
+           this.setState({ kategori: response.data });
+        })
+        .catch(error => console.log(error.response));
+    }
+
     render() {
 
         // Destructing
-        const {id, baslik, icerigi, kategoriId} = this.props;
-        const {isVisible} = this.state;
+        const {id, baslik, icerigi} = this.props;
+        const {isVisible, kategori} = this.state; 
 
         return (
             <IcerikConsumer>
@@ -38,17 +50,32 @@ class Icerik extends Component {
 
                     return (
                         <div className = "col-md-12 mb-4">
-                            <div className = "card" style = {isVisible ? { backgroundColor : "#e0acb1"} : null}>
-                                <div className = "card-header d-flex justify-content-between">
-                                    <h4 className = "d-inline" onClick = {this.onClickEvent}>{baslik}</h4>
-                                    <i className="far fa-trash-alt" style = {{cursor:"pointer"}} onClick = {this.onDeleteIcerik.bind(this, dispatch)}></i>
+                            <div className = "card" style = {isVisible ? { backgroundColor : "#fff5d6"} : null}>
+                                <div className = "card-header justify-content-between">
+                                    <div className="row ml-2">
+                                    <h5>
+                                        <span className="badge badge-primary">
+                                        <i className="fas fa-bookmark mr-2"></i>
+                                        {kategori !== undefined ? kategori.adi : ""}</span>
+                                    </h5>
+                                    </div>
+                                    <div className="row ml-2">
+                                    <h4 className = "d-inline" onClick = {this.onClickEvent}>{baslik}</h4> 
+                                    </div>
+                                    
                                 </div>
                                 {
                                 isVisible ?
-                                <div className="card-body"> 
-                                    <p className = "card-text">İçeriği : {icerigi}</p> 
-                                    <p className = "card-text">Kategori : {kategoriId}</p> 
-                                    <Link to= {`edit/${id}`} className="btn btn-dark btn-block">İçerik Güncelle</Link>
+                                <div className="card-body">  
+                                    <p className = "card-text">{icerigi}</p>  
+                                    <Link to= {`edit/${id}`} className="btn btn-dark btn-block">
+                                        <i className="far fa-edit mr-2"></i>
+                                        İçerik Güncelle
+                                        </Link> 
+                                    <Link onClick = {this.onDeleteIcerik.bind(this, dispatch)} className="btn btn-danger btn-block">
+                                        <i className="far fa-trash-alt mr-2"></i>
+                                        İçerik Sil
+                                    </Link>
                                 </div>
                                 : null
                                 }

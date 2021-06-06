@@ -35,15 +35,10 @@ export class IcerikProvider extends Component {
         }
     }
 
-    componentDidMount = async() => {
+    componentDidMount = async() => {  
+        const token = sessionStorage.getItem('token'); 
+        const response = await axios.get("http://localhost:5000/Api/Icerik/IcerikleriGetir",{ headers: {"Authorization" : `Bearer ${token}`} });
 
-        var config = {
-            headers: {'Access-Control-Allow-Origin': '*'}
-        };
-
-        const response = await axios.get("http://localhost:5000/Api/Icerik/IcerikleriGetir", config); 
-        console.log("Sonuc");
-        console.log(response);
         this.setState({
             iceriks: response.data
         });

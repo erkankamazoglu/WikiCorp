@@ -1,12 +1,16 @@
-using System.Threading.Tasks;
-using AutoMapper; 
+using System;
+using System.Linq; 
+using System.Threading.Tasks; 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WikiCorp.CoreApi.Data;
+using WikiCorp.CoreApi.Helpers;
 using WikiCorp.CoreApi.Models.IcerikVO;
 
 namespace WikiCorp.CoreApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("Api/[controller]")]
     public class IcerikController : ControllerBase
@@ -19,9 +23,14 @@ namespace WikiCorp.CoreApi.Controllers
 
         [HttpGet("IcerikleriGetir")] 
         public async Task<IActionResult> IcerikleriGetir()
-        {
+        { 
+            int userId = JwtHelper.GetUserIdFromToken(HttpContext.User); 
+            var kullaniciRolIds = await _context.KullaniciRol.Where(i => i.KullaniciId == userId).Select(i => i.RolId).ToListAsync();
+            var kategoriIds = await _context.Kategori.Where(i => kullaniciRolIds.Contains(i.RolId) || kullaniciRolIds.Contains(1)).Select(i => i.Id).ToListAsync(); 
+
             var models = await _context
             .Icerik 
+            .Where(i => kategoriIds.Contains(i.KategoriId))
             .ToListAsync();
             return Ok(models);
         } 
@@ -39,6 +48,8 @@ namespace WikiCorp.CoreApi.Controllers
         [HttpPost("IcerikKaydet")]
         public async Task<IActionResult> IcerikKaydet(Icerik entity) 
         {
+            entity.EklenmeTarihi = DateTime.Now;
+            entity.YazarKullaniciId = 1;
             _context.Icerik.Add(entity); 
             await _context.SaveChangesAsync(); 
             return CreatedAtAction(nameof(IcerikGetir), new {id = entity.Id}, entity);
@@ -73,7 +84,7 @@ namespace WikiCorp.CoreApi.Controllers
                 return NotFound();
             } 
 
-            return NoContent();
+            return Ok(entity);
         }
         
         [HttpDelete("IcerikSil/{id}")]
