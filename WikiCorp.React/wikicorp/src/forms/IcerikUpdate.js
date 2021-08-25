@@ -7,7 +7,7 @@ class IcerikUpdate extends Component {
 
     state = { 
         baslik : "",
-        icerigi : "",
+        icerigi : "",  
         kategoriId : 0,
         error : false
     } 
@@ -32,6 +32,12 @@ class IcerikUpdate extends Component {
     changeInput = (e) => {
         this.setState({
             [e.target.name] : e.target.value
+        })
+    }  
+
+    changeFileInput = (e) => { 
+        this.setState({ 
+            [e.target.name] : e.target.files[0]
         })
     } 
 
@@ -67,25 +73,26 @@ class IcerikUpdate extends Component {
         }
 
         return true;
-    }
+    } 
 
     updateIcerik = async (dispatch, e) => {
         e.preventDefault(); 
         //Update İçerik 
-        const {baslik, icerigi, kategoriId } = this.state;
+        const {baslik, icerigi, kategoriId, dosya } = this.state;
         const {id} = this.props.match.params;
+         
         const updatedIcerik = {id, baslik, icerigi, kategoriId}
-
+       
         if(!this.validateForm()) {
             this.setState({
                 error : true
             })
 
             return;
-        }
-        const token = sessionStorage.getItem('token');
-        const response = await axios.put(`http://localhost:5000/Api/Icerik/IcerikGuncelle/${id}`, updatedIcerik,{ headers: {"Authorization" : `Bearer ${token}`} }); 
-        dispatch({type:"UPDATE_ICERIK", payload: response.data});
+        } 
+        const token = sessionStorage.getItem('token');          
+        const response = await axios.put(`http://localhost:5000/Api/Icerik/IcerikGuncelle/${id}`, updatedIcerik,{ headers: {"Authorization" : `Bearer ${token}`} });  
+        dispatch({type:"UPDATE_ICERIK", payload: response.data}); 
 
         //Redirect 
         window.open("/","_self");  
@@ -122,7 +129,11 @@ class IcerikUpdate extends Component {
                                     <div className="form-group">
                                         <label htmlFor="icerigi">İçeriği</label>
                                         <textarea type="text" name="icerigi" id="icerigi" rows="10" className = "form-control" value= {icerigi} onChange={this.changeInput}></textarea>
-                                    </div>
+                                    </div> 
+                                    <div className="form-group">
+                                        <label htmlFor="icerigi">Dosya</label>
+                                        <input type="file" name="dosya" id="dosya" rows="10" className = "form-control" onChange={this.changeFileInput}></input>
+                                    </div> 
                                     <div className="form-group">
                                         <label htmlFor="kategoriId">Kategori</label>
                                         <select className="form-control" name="kategoriId" onChange={this.changeInput} id="kategoriId">

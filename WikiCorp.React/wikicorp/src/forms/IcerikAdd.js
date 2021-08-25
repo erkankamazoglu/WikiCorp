@@ -53,6 +53,12 @@ class IcerikAdd extends Component {
         })
     } 
 
+    changeFileInput = (e) => { 
+        this.setState({ 
+            [e.target.name] : e.target.files[0]
+        })
+    } 
+
     validateForm = () => {
         const {baslik,icerigi,kategoriId} = this.state;
         if(baslik === "" || icerigi === "" || kategoriId === 0)
@@ -134,7 +140,7 @@ class IcerikAdd extends Component {
                                     <div className="form-group">
                                         <label htmlFor="icerigi">İçeriği</label>
                                         <textarea  type="text" name="icerigi" id="icerigi" rows="10" className = "form-control" value= {icerigi} onChange={this.changeInput}></textarea>
-                                    </div>
+                                    </div> 
                                     <div className="form-group">
                                         <label htmlFor="kategoriId">Kategori</label>
                                         <select className="form-control" name="kategoriId" onChange={this.changeInput} id="kategoriId">

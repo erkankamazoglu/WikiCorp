@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 using WikiCorp.CoreApi.Models.Base;
 using WikiCorp.CoreApi.Models.KullaniciVO;
 using WikiCorp.CoreApi.Models.ParametreVO;
@@ -16,8 +18,8 @@ namespace WikiCorp.CoreApi.Models.IcerikVO
 
         public string Baslik { get; set; }
 
-        public string Icerigi { get; set; }
-
+        public string Icerigi { get; set; }  
+        
         public DateTime EklenmeTarihi { get; set; }
 
         public string AnahtarKelimeler { get; set; }

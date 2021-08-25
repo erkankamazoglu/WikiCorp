@@ -6115,11 +6115,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\erkan\\source\\Repositories\\WikiCorp\\WikiCorp.CoreAPi\\WikiCorp.CoreApi.csproj",
+      "projectUniqueName": "C:\\Users\\erkan\\source\\Repositories\\WikiCorp\\WikiCorp.CoreApi\\WikiCorp.CoreApi.csproj",
       "projectName": "WikiCorp.CoreApi",
-      "projectPath": "C:\\Users\\erkan\\source\\Repositories\\WikiCorp\\WikiCorp.CoreAPi\\WikiCorp.CoreApi.csproj",
+      "projectPath": "C:\\Users\\erkan\\source\\Repositories\\WikiCorp\\WikiCorp.CoreApi\\WikiCorp.CoreApi.csproj",
       "packagesPath": "C:\\Users\\erkan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\erkan\\source\\Repositories\\WikiCorp\\WikiCorp.CoreAPi\\obj\\",
+      "outputPath": "C:\\Users\\erkan\\source\\Repositories\\WikiCorp\\WikiCorp.CoreApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\erkan\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -6205,7 +6205,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.206\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -8,16 +8,11 @@ namespace WikiCorp.CoreApi.Helpers
     {
         public static int GetUserIdFromToken(ClaimsPrincipal currentUser)
         {
-            int userId = -1;
-            Console.WriteLine("deneme1"); 
+            int userId = -1; 
             if (currentUser.HasClaim(c => c.Type == (string)ClaimTypes.NameIdentifier))    
             {    
-                userId = Int32.Parse(currentUser.FindFirstValue(ClaimTypes.NameIdentifier));      
-                Console.WriteLine("userId");  
-                Console.WriteLine(userId);  
-            }
-             Console.WriteLine("deneme1");
-
+                userId = Int32.Parse(currentUser.FindFirstValue(ClaimTypes.NameIdentifier));    
+            } 
             return userId;
         }
     }
