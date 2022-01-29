@@ -42,6 +42,7 @@ class Iceriks extends Component {
                                             baslik = {icerik.baslik}
                                             icerigi = {icerik.icerigi}
                                             kategoriId = {icerik.kategoriId}
+                                            dosya = {icerik.dosya}
                                             />
                                         )
                                     })

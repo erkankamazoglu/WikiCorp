@@ -26,6 +26,7 @@ class IcerikAdd extends Component {
         visible : true,
         baslik : "",
         icerigi : "",
+        dosya: [], 
         kategoriId : 0,
         error : false
     }
@@ -72,7 +73,8 @@ class IcerikAdd extends Component {
     addIcerik = async (dispatch, e) => {
         e.preventDefault();
         const {baslik,icerigi,kategoriId} = this.state;
-        const newIcerik = { baslik, icerigi, kategoriId};
+        const dosya = "content.jpg";
+        const newIcerik = { baslik, icerigi, kategoriId, dosya};
         
         if(!this.validateForm()) {
             this.setState({
@@ -140,6 +142,10 @@ class IcerikAdd extends Component {
                                     <div className="form-group">
                                         <label htmlFor="icerigi">İçeriği</label>
                                         <textarea  type="text" name="icerigi" id="icerigi" rows="10" className = "form-control" value= {icerigi} onChange={this.changeInput}></textarea>
+                                    </div> 
+                                    <div className="form-group">
+                                        <label htmlFor="icerigi">Dosya</label>
+                                        <input type="file" name="dosya" id="dosya" rows="10" className = "form-control" onChange={this.changeFileInput}></input>
                                     </div> 
                                     <div className="form-group">
                                         <label htmlFor="kategoriId">Kategori</label>

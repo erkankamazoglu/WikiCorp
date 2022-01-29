@@ -57,17 +57,7 @@ namespace WikiCorp.CoreApi.Controllers
 
         [HttpPut("IcerikGuncelle/{id}")]
         public async Task<IActionResult> IcerikGuncelle(int id, Icerik entity)
-        {
-            Console.WriteLine("###########################");
-            Console.WriteLine("###########################");
-            Console.WriteLine("###########################");
-            Console.WriteLine("###########################");
-            Console.WriteLine(id);
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(entity));
-            Console.WriteLine("###########################");
-            Console.WriteLine("###########################");
-            Console.WriteLine("###########################");
-            Console.WriteLine("###########################");
+        { 
             if (id != entity.Id)
             {
                 return BadRequest();
@@ -84,6 +74,7 @@ namespace WikiCorp.CoreApi.Controllers
             model.AnahtarKelimeler = entity.AnahtarKelimeler; 
             model.KategoriId = entity.KategoriId; 
             model.Icerigi = entity.Icerigi; 
+            model.Dosya = entity.Dosya;
 
             try
             {

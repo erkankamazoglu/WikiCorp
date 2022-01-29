@@ -8,6 +8,7 @@ class IcerikUpdate extends Component {
     state = { 
         baslik : "",
         icerigi : "",  
+        dosya: [], 
         kategoriId : 0,
         error : false
     } 
@@ -78,10 +79,11 @@ class IcerikUpdate extends Component {
     updateIcerik = async (dispatch, e) => {
         e.preventDefault(); 
         //Update İçerik 
-        const {baslik, icerigi, kategoriId, dosya } = this.state;
+        const {baslik, icerigi, kategoriId } = this.state;
         const {id} = this.props.match.params;
-         
-        const updatedIcerik = {id, baslik, icerigi, kategoriId}
+        const dosya = "content.jpg";
+    
+        const updatedIcerik = {id, baslik, icerigi, kategoriId, dosya }
        
         if(!this.validateForm()) {
             this.setState({
@@ -90,8 +92,8 @@ class IcerikUpdate extends Component {
 
             return;
         } 
-        const token = sessionStorage.getItem('token');          
-        const response = await axios.put(`http://localhost:5000/Api/Icerik/IcerikGuncelle/${id}`, updatedIcerik,{ headers: {"Authorization" : `Bearer ${token}`} });  
+        const token = sessionStorage.getItem('token');           
+        const response = await axios.put(`http://localhost:5000/Api/Icerik/IcerikGuncelle/${id}`, updatedIcerik,{ headers: {"Authorization" : `Bearer ${token}`} });          
         dispatch({type:"UPDATE_ICERIK", payload: response.data}); 
 
         //Redirect 

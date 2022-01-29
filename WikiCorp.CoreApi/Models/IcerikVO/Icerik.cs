@@ -25,6 +25,8 @@ namespace WikiCorp.CoreApi.Models.IcerikVO
         public string AnahtarKelimeler { get; set; }
 
         public int OkuyanSayisi { get; set; }
+         
+        public string Dosya { get; set; }
 
         public virtual Kullanici YazarKullanici { get; set;}
         

@@ -39,7 +39,7 @@ class Icerik extends Component {
     render() {
 
         // Destructing
-        const {id, baslik, icerigi} = this.props;
+        const {id, baslik, icerigi, dosya} = this.props;
         const {isVisible, kategori} = this.state; 
 
         return (
@@ -60,14 +60,20 @@ class Icerik extends Component {
                                     </h5>
                                     </div>
                                     <div className="row ml-2">
-                                    <h4 className = "d-inline" onClick = {this.onClickEvent}>{baslik}</h4> 
-                                    </div>
-                                    
+                                    <h4 className = "d-inline" onClick = {this.onClickEvent}>{baslik}</h4>  
+                                    </div> 
                                 </div>
                                 {
                                 isVisible ?
                                 <div className="card-body">  
                                     <p className = "card-text">{icerigi}</p>  
+                                    {
+                                        dosya != null 
+                                        ? 
+                                        <img src={dosya} className="img img-fluid mb-4" alt="foto" />  
+                                        : null
+                                    }  
+
                                     <Link to= {`edit/${id}`} className="btn btn-dark btn-block">
                                         <i className="far fa-edit mr-2"></i>
                                         İçerik Güncelle
